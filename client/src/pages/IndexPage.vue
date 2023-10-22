@@ -90,6 +90,7 @@ function disconnect() {
   socket.value?.send('DISCONNECT: ' + username.value);
   socket.value?.close();
   isRegistered.value = false;
+  username.value = '';
 }
 
 function isMyMessage(msg: string) {
