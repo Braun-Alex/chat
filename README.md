@@ -6,16 +6,16 @@ This is an implementation of a chat server, utilizing a microservices-based arch
 
 The project consists of three main parts:
 
-1. **Main Server**. Written in C++ using the Poco library, it is responsible for for handling messages, managing users, and maintaining network connections.
-2. **Proxy Server**. Implemented in Node.js, Express, and WebSocket, it acts as a bridge between the client and the main server, allowing the use of WebSockets on the client side.
+1. **Main server**. Written in C++ using the Poco library, it is responsible for for handling messages, managing users, and maintaining network connections.
+2. **Proxy server**. Implemented in Node.js, Express, and WebSocket, it acts as a bridge between the client and the main server, allowing the use of WebSockets on the client side.
 3. **Client**. Created using the Quasar framework, enabling a user interface that allows interaction with the servers, sending messages, joining, and leaving the chat.
 
 ## Features 🚀
 
-- 📥 **Joining the Chat**. Users can enter their nickname and join the chat.
-- 💬 **Public Messages**. Allows sending messages that are visible to everyone in the chat.
-- 🕵️‍♀️ **Private Messages**. Users can send private messages that are only visible to the sender and the recipient.
-- 📤 **Exiting the Chat**. Option to leave the chat.
+- 📥 **Joining the chat**. Users can enter their nickname and join the chat.
+- 💬 **Public messages**. Allows sending messages that are visible to everyone in the chat.
+- 🕵️‍♀️ **Private messages**. Users can send private messages that are only visible to the sender and the recipient.
+- 📤 **Exiting the chat**. Option to leave the chat.
 
 ## Installation and running 🔧
 
@@ -115,4 +115,4 @@ quasar dev
 
 ## License 📋
 
-This project is licensed under the MIT License - see the LICENSE.md file for details.
+This project is licensed under the MIT license - see the LICENSE.md file for details.
