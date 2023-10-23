@@ -30,12 +30,11 @@
                 <q-input :disable="!privateMode" outlined v-model="target" label="Нікнейм отримувача" />
               </div>
               <div class="col-2">
-                <q-toggle icon="lock" v-model="privateMode"
-                          :label="privateMode ? 'Приватний режим': 'Широкомовний режим'" />
+                <q-toggle icon="lock" v-model="privateMode" :label="privateMode? 'Приватний режим': 'Широкомовний режим'" />
               </div>
             </div>
 
-            <q-btn @click="sendMessage" glossy color="primary" no-caps rounded :disable="privateMode && target.length == 0"
+            <q-btn @click="sendMessage" glossy color="primary" no-caps rounded :disable="privateMode && target.length === 0"
                    label="Надіслати" class="full-width" />
             <q-btn @click="disconnect" glossy color="negative" no-caps rounded label="Вийти з чату" class="full-width q-mt-sm" />
           </div>
@@ -62,9 +61,6 @@ function register() {
   socket.value.onopen = () => {
     socket.value?.send('CONNECT: ' + username.value);
     isRegistered.value = true;
-    window.onclose = () => {
-      disconnect();
-    }
   }
 
   socket.value.onmessage = (event: MessageEvent) => {

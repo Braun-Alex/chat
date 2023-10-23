@@ -10,7 +10,7 @@ void ChatServer::run() {
     std::cerr << "Chat server started on port " << PORT << "\n";
     while (true) {
         StreamSocket ss = _serverSocket.acceptConnection();
-        auto *thread = new Thread;
+        auto* thread = new Thread;
         thread->start(new ClientHandler(ss, _clients, _mutex, _chatHistory));
     }
 }
@@ -23,24 +23,21 @@ void ChatServer::ClientHandler::run() {
     char buffer[256] = {0};
     int received;
     std::string clientName;
-
     try {
         while (true) {
             received = _ss.receiveBytes(buffer, sizeof(buffer) - 1);
-
             if (received > 0) {
                 if (buffer[received-1] != '\0') {
                     buffer[received] = '\0';
                 }
                 std::string message(buffer);
                 std::cerr << message << "\n";
-
                 if (message.find("CONNECT: ") == 0) {
                     clientName = message.substr(9);
                     {
                         ScopedLock lock(_mutex);
                         _clients[clientName] = _ss;
-                        for (const auto &historyMessage : _chatHistory) {
+                        for (const auto& historyMessage: _chatHistory) {
                             _ss.sendBytes(historyMessage.data(),
                                           static_cast<int>(historyMessage.size()));
                         }
@@ -61,15 +58,15 @@ void ChatServer::ClientHandler::run() {
                 }
             }
         }
-    } catch (const Poco::Exception& e) {
-        std::cerr << "Error: " << e.displayText() << "\n";
+    } catch (const Poco::Exception& error) {
+        std::cerr << "Error: " << error.displayText() << "\n";
     }
 }
 
 void ChatServer::ClientHandler::broadcastMessage(const std::string& msg) {
     ScopedLock lock(_mutex);
     std::string messageToSend = msg + '\0';
-    for (auto &[name, socket] : _clients) {
+    for (auto &[name, socket]: _clients) {
         socket.sendBytes(messageToSend.data(), static_cast<int>(messageToSend.size()));
     }
     addToHistory(msg);
@@ -78,12 +75,15 @@ void ChatServer::ClientHandler::broadcastMessage(const std::string& msg) {
 void ChatServer::ClientHandler::sendPrivateMessage(const std::string& from, const std::string& target,
                                                    const std::string& msg) {
     ScopedLock lock(_mutex);
-    std::string messageFrom = "[Приватно від " + from + "] " + msg + '\0',
-            messageTo = "[Приватно до " + target + "] " + msg + '\0';
     if (_clients.find(target) != _clients.end()) {
+        std::string messageFrom = "[Приватно від " + from + "] " + msg + '\0',
+        messageTo = "[Приватно до " + target + "] " + msg + '\0';
         _clients[target].sendBytes(messageFrom.data(), static_cast<int>(messageFrom.size()));
+        _ss.sendBytes(messageTo.data(), static_cast<int>(messageTo.size()));
+    } else {
+        std::string errorMessage = "Користувача \"" + target + "\" не знайдено" + '\0';
+        _ss.sendBytes(errorMessage.data(), static_cast<int>(errorMessage.size()));
     }
-    _ss.sendBytes(messageTo.data(), static_cast<int>(messageTo.size()));
 }
 
 void ChatServer::ClientHandler::addToHistory(const std::string& msg) {

@@ -5,9 +5,10 @@
 #include <Poco/Net/StreamSocket.h>
 #include <Poco/Thread.h>
 #include <Poco/Mutex.h>
-#include <map>
-#include <deque>
+
 #include <iostream>
+#include <deque>
+#include <map>
 
 const size_t PORT = 8080;
 
